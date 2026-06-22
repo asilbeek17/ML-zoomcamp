@@ -1,3 +1,1 @@
 # ML-zoomcamp
-
-Hello World
