@@ -52,11 +52,17 @@ del df_test['msrp']
 del df_val['msrp']
 
 xi = [275, 13, 1385]
-x11 = int(df_train['engine_hp'].iloc[1]); x12 = int(df_train['city_mpg'].iloc[1]); x13 = int(df_train['popularity'].iloc[1])
-x21 = int(df_train['engine_hp'].iloc[2]); x22 = int(df_train['city_mpg'].iloc[2]); x23 = int(df_train['popularity'].iloc[2])
-x31 = int(df_train['engine_hp'].iloc[3]); x32 = int(df_train['city_mpg'].iloc[3]); x33 = int(df_train['popularity'].iloc[3])
-x41 = int(df_train['engine_hp'].iloc[4]); x42 = int(df_train['city_mpg'].iloc[4]); x43 = int(df_train['popularity'].iloc[4])
-x51 = int(df_train['engine_hp'].iloc[5]); x52 = int(df_train['city_mpg'].iloc[5]); x53 = int(df_train['popularity'].iloc[5])
+x11 = int(df_train['engine_hp'].iloc[1]); x12 = int(df_train['city_mpg'].iloc[1])\
+    ; x13 = int(df_train['popularity'].iloc[1])
+x21 = int(df_train['engine_hp'].iloc[2]); x22 = int(df_train['city_mpg'].iloc[2])\
+    ; x23 = int(df_train['popularity'].iloc[2])
+x31 = int(df_train['engine_hp'].iloc[3]); x32 = int(df_train['city_mpg'].iloc[3])\
+    ; x33 = int(df_train['popularity'].iloc[3])
+x41 = int(df_train['engine_hp'].iloc[4]); x42 = int(df_train['city_mpg'].iloc[4])\
+    ; x43 = int(df_train['popularity'].iloc[4])
+x51 = int(df_train['engine_hp'].iloc[5]); x52 = int(df_train['city_mpg'].iloc[5])\
+    ; x53 = int(df_train['popularity'].iloc[5])
+
 x1 = [1, x11, x12, x13]
 x2 = [1, x21, x22, x23]
 x3 = [1, x31, x32, x33]
