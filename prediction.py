@@ -162,6 +162,6 @@ x_val = prepare_X(df_val)
 y_pred = w0 + x_val.dot(w)
 # print(rmse(y_val, y_pred))
 
-# sns.histplot(y_pred, color='red', alpha=0.5, bins=50)
-# sns.histplot(y_val, color='blue', alpha=0.5, bins=50)
+sns.histplot(y_pred, color='red', alpha=0.5, bins=50)
+sns.histplot(y_val, color='blue', alpha=0.5, bins=50)
 # plt.show()
