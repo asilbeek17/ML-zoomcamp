@@ -1,3 +1,5 @@
+from os import pread
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,7 +16,7 @@ for i in strings:
 
 np.log1p([1, 10, 100, 1000, 10000])
 price_logs = np.log1p(df.msrp)
-graph = sns.histplot(price_logs, bins=50)
+# graph = sns.histplot(price_logs, bins=50)
 # plt.show()
 
 n = len(df)
@@ -98,11 +100,68 @@ def linear_regression_new(xi):
 linear_regression_new(xi)
 
 def train_linear_regression(xf, y):
+    ones = np.ones(xf.shape[0])
+    xf = np.column_stack([ones, xf])
+
     xtx = xf.T.dot(xf)
     inverse = np.linalg.inv(xtx)
     w_full = inverse.dot(xf.T).dot(y)
 
-    print(w_full[0], w_full[1:])
+    return w_full[0], w_full[1:]
 
-train_linear_regression(xf, y)
+    # print(w_full[0], w_full[1:])
 
+# train_linear_regression(xf, y)
+
+base = ['engine_hp', 'engine_cylinders', 'highway_mpg', 'city_mpg', 'popularity']
+x_train = df_train[base].values
+x_train = df_train[base].fillna(0).values
+w0, w = train_linear_regression(x_train, y_train)
+y_pred = w0 + x_train.dot(w)
+
+# sns.histplot(y_pred, color='red', alpha=0.5, bins=50)
+# sns.histplot(y_train, color='blue', alpha=0.5, bins=50)
+# plt.show()
+
+def rmse(y, y_pred):
+    se = (y - y_pred) ** 2
+    mse = se.mean()
+    return np.sqrt(mse)
+
+# print(rmse(y_train, y_pred))
+
+def prepare_X(df):
+    df_num = df[base]
+    df_num = df_num.fillna(0)
+    X = df_num.values
+    return X
+
+x_train = prepare_X(df_train)
+w0, w = train_linear_regression(x_train, y_train)
+
+x_val = prepare_X(df_val)
+y_pred = w0 + x_val.dot(w)
+# print(rmse(y_val, y_pred))
+
+def prepare_X(df):
+    df = df.copy()
+
+    df['age'] = 2017 - df.year
+    features = base + ['age']
+
+    df_num = df[features]
+    df_num = df_num.fillna(0)
+    X = df_num.values
+    return X
+
+x_train = prepare_X(df_train)
+x_train = prepare_X(df_train)
+w0, w = train_linear_regression(x_train, y_train)
+
+x_val = prepare_X(df_val)
+y_pred = w0 + x_val.dot(w)
+# print(rmse(y_val, y_pred))
+
+# sns.histplot(y_pred, color='red', alpha=0.5, bins=50)
+# sns.histplot(y_val, color='blue', alpha=0.5, bins=50)
+# plt.show()
