@@ -38,8 +38,65 @@ df_val = df_val.reset_index(drop=True)
 y_train = np.log1p(df_train.msrp.values)
 y_test = np.log1p(df_test.msrp.values)
 y_val = np.log1p(df_val.msrp.values)
+
+# y original msrp price
+y11 = int(df_train['msrp'].iloc[1])
+y21 = int(df_train['msrp'].iloc[2])
+y31 = int(df_train['msrp'].iloc[3])
+y41 = int(df_train['msrp'].iloc[4])
+y51 = int(df_train['msrp'].iloc[5])
+y = [y11, y21, y31, y41, y51]
+
 del df_train['msrp']
 del df_test['msrp']
 del df_val['msrp']
 
-print(y_train)
+xi = [275, 13, 1385]
+x11 = int(df_train['engine_hp'].iloc[1]); x12 = int(df_train['city_mpg'].iloc[1]); x13 = int(df_train['popularity'].iloc[1])
+x21 = int(df_train['engine_hp'].iloc[2]); x22 = int(df_train['city_mpg'].iloc[2]); x23 = int(df_train['popularity'].iloc[2])
+x31 = int(df_train['engine_hp'].iloc[3]); x32 = int(df_train['city_mpg'].iloc[3]); x33 = int(df_train['popularity'].iloc[3])
+x41 = int(df_train['engine_hp'].iloc[4]); x42 = int(df_train['city_mpg'].iloc[4]); x43 = int(df_train['popularity'].iloc[4])
+x51 = int(df_train['engine_hp'].iloc[5]); x52 = int(df_train['city_mpg'].iloc[5]); x53 = int(df_train['popularity'].iloc[5])
+x1 = [1, x11, x12, x13]
+x2 = [1, x21, x22, x23]
+x3 = [1, x31, x32, x33]
+x4 = [1, x41, x42, x43]
+x5 = [1, x51, x52, x53]
+
+xf = [x1, x2, x3, x4, x5]
+xf = np.array(xf)
+# print(xf)
+
+w0 = 7.17
+w = [0.01, 0.04, 0.002]
+w_new = [w0] + w
+
+def dot(xi, w):
+    n = len(xi)
+    res = 0.0
+
+    for i in range(n):
+        res = res + xi[i] * w[i]
+
+    return res
+
+def linear_regression(xi):
+    # pred = w0 + dot(xi, w)
+    # print(pred)
+    pass
+
+def linear_regression_new(xi):
+    # print(xf.dot(w_new))
+    pass
+
+linear_regression_new(xi)
+
+def train_linear_regression(xf, y):
+    xtx = xf.T.dot(xf)
+    inverse = np.linalg.inv(xtx)
+    w_full = inverse.dot(xf.T).dot(y)
+
+    print(w_full[0], w_full[1:])
+
+train_linear_regression(xf, y)
+
