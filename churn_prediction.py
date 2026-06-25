@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mutual_info_score
+from sklearn.feature_extraction import DictVectorizer
+from sklearn.linear_model import LogisticRegression
 
 from car_prediction import df_full_train
 
@@ -52,11 +55,58 @@ categorical = ['gender', 'seniorcitizen', 'partner', 'dependents',
 # churn_partner_no = df_full_train[df_full_train['partner'] == 'no'].churn.mean()
 
 for c in categorical:
-    print(c)
+    # print(c)
     df_group = df_full_train.groupby(c).churn.agg(['mean', 'count'])
     df_group['diff'] = df_group['mean'] - global_churn_rate
     df_group['risk'] = df_group['mean'] / global_churn_rate
-    print(df_group)
-    print()
+    # print(df_group)
+    # print()
+
+def mutual_info_churn_score(series):
+    return mutual_info_score(series, df_full_train.churn)
+
+mi = df_full_train[categorical].apply(mutual_info_churn_score).sort_values(ascending=False)
+correlaction = df_full_train[numerical].corrwith(df_full_train.churn)
+
+# DICTS OF TRAIN
+train_dicts = df_train[categorical + numerical].to_dict(orient='records')
+dv = DictVectorizer(sparse=False)
+X_train = dv.fit_transform(train_dicts)
+
+# DICTS OF VAL
+val_dicts = df_val[categorical + numerical].to_dict(orient='records')
+X_val = dv.transform(val_dicts)
 
 
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+a = np.linspace(-10, 10, 5)
+
+model = LogisticRegression(max_iter=10000)
+model.fit(X_train, y_train)
+y_pred = model.predict_proba(X_val)[:, 1]
+churn_decision = y_pred >= 0.5
+model_correct_percentage = ((y_val == 'yes').astype(int) == churn_decision.astype(int)).mean()
+
+zipped = dict(zip(dv.get_feature_names_out(), model.coef_[0].round(3)))
+
+y_test = (y_test == 'yes').astype(int)
+y_full_train = df_full_train.churn.values
+
+dicts_full_train = df_full_train[categorical + numerical].to_dict(orient='records')
+dv = DictVectorizer(sparse=False)
+X_full_train = dv.fit_transform(dicts_full_train)
+model = LogisticRegression(max_iter=10000)
+model.fit(X_full_train, y_full_train)
+
+dicts_test = df_test[categorical + numerical].to_dict(orient='records')
+X_test = dv.transform(dicts_test)
+y_pred = model.predict_proba(X_test)[:, 1]
+churn_decision = (y_pred >= 0.5)
+# print((churn_decision == y_test).mean())
+
+customer = dicts_test[-1]
+x_small = dv.transform([customer])
+coef_churn = model.predict_proba(x_small)[0, 1]
+# print(coef_churn, y_test[-1])
