@@ -77,7 +77,7 @@ train_dicts = df_train[categorical + numerical].to_dict(orient='records')
 dv = DictVectorizer(sparse=False)
 X_train = dv.fit_transform(train_dicts)
 
-# DICTS OF VAL
+# DICTS OF VALIDATION
 val_dicts = df_val[categorical + numerical].to_dict(orient='records')
 X_val = dv.transform(val_dicts)
 
