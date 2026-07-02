@@ -186,3 +186,5 @@ n=10
 rf = RandomForestClassifier(n_estimators=n, max_depth=max_depth,
                             min_samples_leaf=min_samples_leaf, random_state=1)
 rf.fit(X_train, y_train)
+
+# till here for now
